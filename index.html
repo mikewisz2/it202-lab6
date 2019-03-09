@@ -4,99 +4,62 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>3 screen app</title>
+	<title>repl.it</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 	 crossorigin="anonymous">
 
-
-	<style>
-		.content {
-			display: none;
-			margin: 1em;
-		}
-	</style>
-
+   <style>
+     #template {display:none;}
+    </style>
 </head>
 
 <body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<a class="navbar-brand" href="#">Navbar</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-    </button>
-  <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="#home">Home/Create <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#screen2">List</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#screen3">Detail</a>
-      </li>
-    </ul>
-  </div>
-  </nav>
-  <div class="content" id="home">
-    Home page
-      <form id="myForm">
-      <input type="text" id="Title" placeholder="Enter title">
-      <input type="text" id="Body" placeholder="Enter body">      
-      <input type="text" id="Date" placeholder="Enter date">
-      </form>
-      <button id="getFormData">Get Form Data</button>
-
+	<ul class="list-group">
+		<li id="template" class="list-group-item d-flex justify-content-between align-items-center">
+			Cras justo odio
+			<span class="badge badge-primary badge-pill">14</span>
+  </li>
+ 
+</ul>
 
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function(){
+$.get('https://data.cityofchicago.org/resource/xzkq-xp2w.json?$select=department,count(department)&$group=department&$order=department', function(data) {
+  console.log(data);
+  $.each(data, function(i,v) {
+    var clone = $("#template").clone();
+    clone.text(v.department);
+    var span = $("<span>")
+    .addClass("badge badge-primary badge-pill")
+    .text(v.count_department);
+    clone.append(span);
+    clone.attr("id","");
+    clone.attr("data-department",encodeURIComponent(v.department));
 
-    <script>
-      $(document).ready(function(){
+    $(".list-group").append(clone);
 
-        // event handler
-        $("#getFormData").on("click", function() {
-          $("body").append($("<hr>"));  
-          $("body").append($("#Title").val());
-          $("body").append($("<br>"));
-          $("body").append($("#Body").val());
-          $("body").append($("<br>"));
-          $("body").append($("#Date").val());
-          
-        });
-      });
-
-      </script>
-  </div>
-  <div class="content" id="screen2">
-    This is screen 2
-  </div>
-  <div class="content" id="screen3">
-    This is screen 3
-  </div>
+  });
+});
 
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-      
+$("body").on("click", ".list-group-item",function( ) {
+$.get("https://data.cityofchicago.org/resource/xzkq-xp2w.json?department=" +  $(this).attr("data-department"), function(data) {
+    console.log(data);
+		// <clear whatever container holds the cards>
+		// <loop through response data, clone simple card and append to container>
+	});
 
-    <script>
-      $(document).ready(function() {
-
-        function hideScreens() {
-          $(".content").hide();
-        }
-
-        $(".nav-link").on("click", function(){
-          hideScreens();
-          var target = $(this).attr("href");
-          $(target).show();
-        });
-
-      });
-    </script>
+});
 
 
+
+});
+
+</script>
   </body>
 </html>
